@@ -30,15 +30,12 @@ class FakeNewsTest(StageTest):
     def generate(self):
         return [TestCase(stdin= [self.check],time_limit=60000)]
     def check(self, reply, attach):
-        print(reply)
         lines = reply.split('\n')
         if "" in lines:
             lines = list(filter(lambda a: a != "", lines))
 
 
         relevant_lines = get_lines_with_key_words(lines, keywords=['model:', 'vectorizer:', 'accuracy:'])
-
-        print(relevant_lines)
 
         # general
         if len(relevant_lines) != 6:
