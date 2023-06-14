@@ -29,4 +29,4 @@ y_pred = vc.predict(count_test)
 acc = metrics.accuracy_score(y_test, y_pred)
 
 
-print(acc)
+print("Accuracy: " + str(acc))
