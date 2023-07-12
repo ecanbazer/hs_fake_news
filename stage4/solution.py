@@ -28,7 +28,7 @@ x_train, x_test, y_train, y_test = train_test_split(data, encoded_labels, test_s
 # Step 6: Build the model
 model = Sequential()
 model.add(Embedding(input_dim=1000, output_dim=128, input_length=max_sequence_length))
-model.add(LSTM(128, return_sequences=True))  
+model.add(LSTM(128, return_sequences=True,dropout=0.2))  
 model.add(LSTM(32))
 model.add(Dense(1, activation='sigmoid'))
 
