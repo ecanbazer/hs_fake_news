@@ -14,7 +14,7 @@ df = pd.read_csv('../fake_or_real_news.csv')
 X = df['text']
 y = df['label']
 
-tokenizer = Tokenizer(num_words=1000)
+tokenizer = Tokenizer(num_words=2500)
 tokenizer.fit_on_texts(X)
 sequences = tokenizer.texts_to_sequences(X)
 
