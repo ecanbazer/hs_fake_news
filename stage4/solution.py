@@ -14,7 +14,8 @@ df = pd.read_csv('../fake_or_real_news.csv')
 X = df['text']
 y = df['label']
 
-tokenizer = Tokenizer(num_words=2500)
+num_words = 2500
+tokenizer = Tokenizer(num_words)
 tokenizer.fit_on_texts(X)
 sequences = tokenizer.texts_to_sequences(X)
 
@@ -29,7 +30,7 @@ x_train, x_test, y_train, y_test = train_test_split(data, encoded_labels, test_s
 
 # Step 6: Build the model
 model = Sequential()
-model.add(Embedding(input_dim=1000, output_dim=128, input_length=max_sequence_length))
+model.add(Embedding(input_dim= num_words, output_dim=128, input_length=max_sequence_length))
 model.add(LSTM(128, return_sequences=True))  
 model.add(LSTM(32))
 model.add(Dense(1, activation='sigmoid'))
@@ -41,7 +42,7 @@ model_save = ModelCheckpoint(checkpoint_filepath , save_best_only=True,  monitor
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 # Step 8: Train the model
-model.fit(x_train, y_train, validation_split = 0.2, epochs=20, batch_size=32, callbacks = [model_save])
+model.fit(x_train, y_train, validation_split = 0.2, epochs=30, batch_size=32, callbacks = [model_save])
 model.load_weights(checkpoint_filepath)
 loss, accuracy = model.evaluate(x_test, y_test)
 print(f'Test loss: {loss}')
