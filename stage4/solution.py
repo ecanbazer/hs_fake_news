@@ -35,7 +35,7 @@ model.add(LSTM(32))
 model.add(Dense(1, activation='sigmoid'))
 
 checkpoint_filepath = 'best_model.hdf5'
-model_save = ModelCheckpoint(checkpoint_filepath , save_best_only=True)
+model_save = ModelCheckpoint(checkpoint_filepath , save_best_only=True,  monitor='val_accuracy')
 
 # Step 7: Compile the model
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
