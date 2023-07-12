@@ -41,7 +41,7 @@ model_save = ModelCheckpoint(checkpoint_filepath , save_best_only=True,  monitor
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 # Step 8: Train the model
-model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=20, batch_size=32, callbacks = [model_save])
+model.fit(x_train, y_train, validation_split = 0.2, epochs=20, batch_size=32, callbacks = [model_save])
 model.load_weights(checkpoint_filepath)
 loss, accuracy = model.evaluate(x_test, y_test)
 print(f'Test loss: {loss}')
