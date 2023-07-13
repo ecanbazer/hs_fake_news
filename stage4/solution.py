@@ -31,7 +31,7 @@ x_train, x_test, y_train, y_test = train_test_split(data, encoded_labels, test_s
 # Step 6: Build the model
 model = Sequential()
 model.add(Embedding(input_dim= num_words, output_dim=32, input_length=max_sequence_length))
-model.add(LSTM(32))
+model.add(LSTM(32, dropout = 0.2))
 model.add(Dense(1, activation='sigmoid'))
 
 checkpoint_filepath = 'best_model.hdf5'
@@ -41,7 +41,7 @@ model_save = ModelCheckpoint(checkpoint_filepath , save_best_only=True,  monitor
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 # Step 8: Train the model
-model.fit(x_train, y_train, validation_split = 0.2, epochs=20, batch_size=32, callbacks = [model_save])
+model.fit(x_train, y_train, validation_split = 0.2, epochs=15, batch_size=32, callbacks = [model_save])
 model.load_weights(checkpoint_filepath)
 loss, accuracy = model.evaluate(x_test, y_test)
 print(f'Test loss: {loss}')
