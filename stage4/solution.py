@@ -31,8 +31,8 @@ x_train, x_test, y_train, y_test = train_test_split(data, encoded_labels, test_s
 
 # Step 6: Build the model
 model = Sequential()
-model.add(Embedding(input_dim= num_words, output_dim=32, input_length=max_sequence_length))
-model.add(LSTM(32, dropout = 0.2))
+model.add(Embedding(input_dim= num_words, output_dim=64, input_length=max_sequence_length))
+model.add(LSTM(64, dropout = 0.2))
 model.add(Dense(1, activation='sigmoid'))
 
 checkpoint_filepath = 'best_model.hdf5'
