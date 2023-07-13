@@ -5,6 +5,7 @@ from tensorflow.keras.layers import Dense, Embedding, LSTM
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.callbacks import ModelCheckpoint
+from tensorflow.keras.optimizers import AdamW
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
@@ -38,7 +39,7 @@ checkpoint_filepath = 'best_model.hdf5'
 model_save = ModelCheckpoint(checkpoint_filepath , save_best_only=True,  monitor='val_accuracy')
 
 # Step 7: Compile the model
-model.compile(optimizer='AdamW', loss='binary_crossentropy', metrics=['accuracy'])
+model.compile(optimizer= AdamW(), loss='binary_crossentropy', metrics=['accuracy'])
 
 # Step 8: Train the model
 model.fit(x_train, y_train, validation_split = 0.2, epochs=15, batch_size=32, callbacks = [model_save])
