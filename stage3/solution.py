@@ -7,9 +7,11 @@ from sklearn.ensemble import VotingClassifier
 from sklearn import metrics
 import pandas as pd
 
-df = pd.read_csv('../fake_or_real_news.csv')
+df = pd.read_csv('/Users/emrecanbazer/Desktop/python-things/fake_news_classification/hs_fake_news/fake_or_real_news.csv')
 y = df['label']
 X_train, X_test, y_train, y_test = train_test_split(df['text'], y, test_size = 0.3, random_state = 41)
+
+df['text']
 
 count_vectorizer = CountVectorizer(stop_words = 'english')
 count_train = count_vectorizer.fit_transform(X_train)
@@ -27,6 +29,5 @@ vc = VotingClassifier(estimators=classifiers)
 vc.fit(count_train,y_train)
 y_pred = vc.predict(count_test)
 acc = metrics.accuracy_score(y_test, y_pred)
-
 
 print("Accuracy: " + str(acc))
