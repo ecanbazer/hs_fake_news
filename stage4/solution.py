@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Embedding, LSTM
+from tensorflow.keras.layers import Dense, Embedding, LSTM, Dropout
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.callbacks import ModelCheckpoint
@@ -31,9 +31,10 @@ x_train, x_test, y_train, y_test = train_test_split(data, encoded_labels, test_s
 
 # Step 6: Build the model
 model = Sequential()
-model.add(Embedding(input_dim= num_words, output_dim=64, input_length=max_sequence_length))
-model.add(LSTM(64))
-model.add(Dense(256, activation = 'relu'))
+model.add(Embedding(input_dim= num_words, output_dim=100, input_length=max_sequence_length))
+model.add(LSTM(100))
+model.add(Dropout(0.3))
+#model.add(Dense(256, activation = 'relu'))
 model.add(Dense(1, activation='sigmoid'))
 
 checkpoint_filepath = 'best_model.hdf5'
