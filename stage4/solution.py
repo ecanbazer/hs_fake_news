@@ -30,10 +30,13 @@ encoded_labels = label_encoder.fit_transform(y)
 x_train, x_test, y_train, y_test = train_test_split(data, encoded_labels, test_size = 0.3, random_state = 41)
 
 # Step 6: Build the model
+hidden_dim = 256
 model = Sequential()
-model.add(Embedding(input_dim= num_words, output_dim=100, input_length=max_sequence_length))
-model.add(LSTM(100))
-model.add(Dropout(0.3))
+model.add(Embedding(input_dim= num_words, output_dim=hidden_dim, input_length=max_sequence_length))
+model.add(LSTM(hidden_dim))
+model.add(Dropout(0.5))
+model.add(LSTM(hidden_dim))
+model.add(Dropout(0.5))
 #model.add(Dense(256, activation = 'relu'))
 model.add(Dense(1, activation='sigmoid'))
 
