@@ -28,7 +28,7 @@ x_train, x_test, y_train, y_test = train_test_split(data, encoded_labels, test_s
 model = Sequential()
 model.add(Embedding(input_dim= num_words, output_dim=100, input_length=max_sequence_length))
 model.add(LSTM(100))
-model.add(Dense(1, activation='sigmoid'))
+model.add(Dense(1, activation='softmax'))
 
 checkpoint_filepath = 'best_model.hdf5'
 model_save = ModelCheckpoint(checkpoint_filepath , save_best_only=True,  monitor='val_accuracy')
