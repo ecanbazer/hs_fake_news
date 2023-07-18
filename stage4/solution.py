@@ -33,7 +33,7 @@ x_train, x_test, y_train, y_test = train_test_split(data, encoded_labels, test_s
 model = Sequential()
 model.add(Embedding(input_dim= num_words, output_dim=256, input_length=max_sequence_length))
 model.add(LSTM(256))
-model.add(Dropout(0.5))
+#model.add(Dropout(0.5))
 model.add(LSTM(256))
 model.add(Dropout(0.5))
 #model.add(Dense(256, activation = 'relu'))
