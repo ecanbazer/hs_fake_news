@@ -24,18 +24,18 @@ class FakeNewsTest(StageTest):
             lines = list(filter(lambda a: a != "", lines))
 
 
-        relevant_lines = get_lines_with_key_words(lines, keywords=['accuracy:'])
+        relevant_lines = get_lines_with_key_words(lines, keywords=['Test accuracy:'])
 
         # general
         if len(relevant_lines) != 1:
             return CheckResult.wrong(
-                feedback=f"Expected 1 lines with Model:/Accuracy:, found {len(relevant_lines)}\n")
+                feedback=f"Expected 1 line with Accuracy, found {len(relevant_lines)}\n")
 
         accuracy_reply = re.findall(r'\d*\.\d+|\d+', relevant_lines[0])
         if len(accuracy_reply) != 1:
             return CheckResult.wrong(feedback=f'It should be one number in the "Accuracy:" section')
-        # 1% error rate is allowed, right accuracy = 0.923
-        if not 0.99 * 0.923 < float(accuracy_reply[0]) < 1.01 * 0.923:
+        # 1% error rate is allowed, right accuracy = 0.85
+        if not 0.99 * 0.876 < float(accuracy_reply[0]) < 1.01 * 0.876:
             return CheckResult.wrong(feedback=f"Wrong accuracy")
 
         return CheckResult.correct()
