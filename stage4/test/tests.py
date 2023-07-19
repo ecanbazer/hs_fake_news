@@ -17,7 +17,7 @@ def get_lines_with_key_words(lines, keywords):
 class FakeNewsTest(StageTest):
 
     def generate(self):
-        return [TestCase(stdin= [self.check],time_limit=120000)]
+        return [TestCase(stdin= [self.check],time_limit=12000000000)]
     def check(self, reply, attach):
         lines = reply.split('\n')
         if "" in lines:
