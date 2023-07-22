@@ -25,7 +25,10 @@ data = pad_sequences(sequences, maxlen=max_sequence_length)
 
 label_encoder = LabelEncoder()
 encoded_labels = label_encoder.fit_transform(y)
-x_train, x_test, y_train, y_test = train_test_split(data, encoded_labels, test_size = 0.3, random_state = 41)
+
+X_non_test, X_test, y_non_test, y_test = train_test_split(data, encoded_labels, test_size = 0.3, random_state = 41)
+
+X_train, X_val, y_train, y_val = train_test_split(X_non_test, y_non_test, test_size = 0.2, random_state = 41)
 
 model = Sequential()
 model.add(Embedding(input_dim= num_words, output_dim=100, input_length=max_sequence_length))
@@ -36,7 +39,7 @@ checkpoint_filepath = 'best_model.keras'
 model_save = ModelCheckpoint(checkpoint_filepath , save_best_only=True,  monitor='val_accuracy')
 
 model.compile(optimizer= AdamW(), loss='binary_crossentropy', metrics=['accuracy'])
-model.fit(x_train, y_train, validation_split = 0.2, epochs=15, batch_size=32, callbacks = [model_save])
+model.fit(X_train, y_train, validation_data = (X_val, y_val), epochs=15, batch_size=32, callbacks = [model_save])
 model.load_weights(checkpoint_filepath)
-loss, accuracy = model.evaluate(x_test, y_test)
-print(f'Accuracy: {accuracy}')
+loss, accuracy = model.evaluate(X_test, y_test)
+print(f'Test accuracy: {accuracy}')
