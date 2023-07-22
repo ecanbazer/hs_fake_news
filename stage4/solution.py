@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import random as python_random
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Embedding, LSTM
 from tensorflow.keras.preprocessing.text import Tokenizer
@@ -14,6 +15,8 @@ from sklearn.preprocessing import LabelEncoder
 np.random.seed(41)
 set_random_seed(41)
 random.set_seed(41)
+python_random.seed(41)
+
 
 df = pd.read_csv('../fake_or_real_news.csv')
 X = df['text']
