@@ -39,8 +39,8 @@ X_train, X_val, y_train, y_val = train_test_split(X_non_test, y_non_test, test_s
 
 model = Sequential()
 model.add(Embedding(input_dim= num_words, output_dim=100, input_length=max_sequence_length))
-model.add(LSTM(100))
-model.add(Dense(1, activation='sigmoid'))
+model.add(LSTM(100, kernel_initializer = 'ones', bias_initializer='zeros'))
+model.add(Dense(1, activation='sigmoid',kernel_initializer = 'ones', bias_initializer='zeros'))
 
 checkpoint_filepath = 'best_model.keras'
 model_save = ModelCheckpoint(checkpoint_filepath , save_best_only=True,  monitor='val_accuracy')
