@@ -24,7 +24,7 @@ class FakeNewsTest(StageTest):
             lines = list(filter(lambda a: a != "", lines))
 
 
-        relevant_lines = get_lines_with_key_words(lines, keywords=['accuracy:'])
+        relevant_lines = get_lines_with_key_words(lines, keywords=['model'])
 
         # general
         if len(relevant_lines) != 1:

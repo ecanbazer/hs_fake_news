@@ -42,4 +42,4 @@ model.compile(optimizer= AdamW(), loss='binary_crossentropy', metrics=['accuracy
 model.fit(X_train, y_train, validation_data = (X_val, y_val), epochs=15, batch_size=32, callbacks = [model_save])
 model.load_weights(checkpoint_filepath)
 loss, accuracy = model.evaluate(X_test, y_test)
-print(f'Test accuracy: {accuracy}')
+print(f'Model accuracy: {accuracy}')
