@@ -221,11 +221,11 @@ for p in params[-4:]:
 # Note: AdamW is a class from the huggingface library (as opposed to pytorch) 
 # I believe the 'W' stands for 'Weight Decay fix"
 optimizer = AdamW(model.parameters()
-                  ,lr = 2e-5, # args.learning_rate - default is 5e-5, our notebook had 2e-5
-                  eps = 1e-8 # args.adam_epsilon  - default is 1e-8.
+                  ,lr = 2e-5 # args.learning_rate - default is 5e-5, our notebook had 2e-5
+  #                ,eps = 1e-8 # args.adam_epsilon  - default is 1e-8.
                 )
 
-from transformers import get_linear_schedule_with_warmup
+#from transformers import get_linear_schedule_with_warmup
 
 # Number of training epochs. The BERT authors recommend between 2 and 4. 
 # We chose to run for 3, but we'll see later that this may be over-fitting the
@@ -233,12 +233,12 @@ from transformers import get_linear_schedule_with_warmup
 epochs = 3
 # Total number of training steps is [number of batches] x [number of epochs]. 
 # (Note that this is not the same as the number of training samples).
-total_steps = len(train_dataloader) * epochs
+#total_steps = len(train_dataloader) * epochs
 
 # Create the learning rate scheduler.
-scheduler = get_linear_schedule_with_warmup(optimizer, 
-                                            num_warmup_steps = 0, # Default value in run_glue.py
-                                            num_training_steps = total_steps)
+#scheduler = get_linear_schedule_with_warmup(optimizer, 
+#                                           num_warmup_steps = 0, # Default value in run_glue.py
+#                                            num_training_steps = total_steps)
 
 import numpy as np
 
@@ -376,7 +376,7 @@ for epoch_i in range(0, epochs):
         optimizer.step()
 
         # Update the learning rate.
-        scheduler.step()
+ #       scheduler.step()
 
     # Calculate the average loss over all of the batches.
     avg_train_loss = total_train_loss / len(train_dataloader)            
