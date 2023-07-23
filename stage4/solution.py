@@ -19,7 +19,7 @@ random.set_seed(41)
 python_random.seed(41)
 enable_op_determinism()
 
-df = pd.read_csv('../fake_or_real_news.csv')
+df = pd.read_csv('fake_or_real_news.csv')
 X = df['text']
 y = df['label']
 
