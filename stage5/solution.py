@@ -22,7 +22,7 @@ from sklearn.model_selection import train_test_split
 def lower_str(s):
         return s.lower()
 
-df = pd.read_csv('fake_or_real_news.csv')
+df = pd.read_csv('../fake_or_real_news.csv')
 X = df['text'].apply(lower_str)
 y = df['label']
 y = [0 if i =='FAKE' else 1 for i in list(y)]
