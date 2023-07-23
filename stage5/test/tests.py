@@ -24,7 +24,7 @@ class FakeNewsTest(StageTest):
             lines = list(filter(lambda a: a != "", lines))
 
 
-        relevant_lines = get_lines_with_key_words(lines, keywords=['model'])
+        relevant_lines = get_lines_with_key_words(lines, keywords=['fine-tuned'])
 
         # general
         if len(relevant_lines) != 1:
@@ -34,8 +34,8 @@ class FakeNewsTest(StageTest):
         accuracy_reply = re.findall(r'\d*\.\d+|\d+', relevant_lines[0])
         if len(accuracy_reply) != 1:
             return CheckResult.wrong(feedback=f'It should be one number in the "Accuracy:" section')
-        # 1% error rate is allowed, right accuracy = 0.886
-        if not 0.98 * 0.886 < float(accuracy_reply[0]) < 1.02 * 0.886:
+        # 1% error rate is allowed, right accuracy = 0.973
+        if not 0.98 * 0.973 < float(accuracy_reply[0]) < 1.02 * 0.973:
             return CheckResult.wrong(feedback=f"Wrong accuracy")
 
         return CheckResult.correct()

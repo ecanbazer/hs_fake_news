@@ -544,7 +544,7 @@ bert_pred = np.concatenate(pred_labels).ravel()
 #write f1 score
 accuracy = sklearn.metrics.accuracy_score(bert_gold, bert_pred)
 
-print("Model accuracy: " + str(accuracy))
+print("Fine-tuned Model Accuracy: " + str(accuracy))
 
 
 print('    DONE.')
