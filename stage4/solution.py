@@ -8,6 +8,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.keras.optimizers import AdamW
 from tensorflow.keras.utils import set_random_seed
+from tensorflow.config.experimental import enable_op_determinism
 from tensorflow import random
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
@@ -16,7 +17,7 @@ np.random.seed(41)
 set_random_seed(41)
 random.set_seed(41)
 python_random.seed(41)
-
+enable_op_determinism()
 
 df = pd.read_csv('../fake_or_real_news.csv')
 X = df['text']
@@ -39,8 +40,12 @@ X_train, X_val, y_train, y_val = train_test_split(X_non_test, y_non_test, test_s
 
 model = Sequential()
 model.add(Embedding(input_dim= num_words, output_dim=100, input_length=max_sequence_length))
-model.add(LSTM(100, kernel_initializer = 'ones', bias_initializer='zeros'))
-model.add(Dense(1, activation='sigmoid',kernel_initializer = 'ones', bias_initializer='zeros'))
+model.add(LSTM(100
+               #, kernel_initializer = 'ones', bias_initializer='zeros'
+               ))
+model.add(Dense(1, activation='sigmoid'
+                #,kernel_initializer = 'ones', bias_initializer='zeros'
+                ))
 
 checkpoint_filepath = 'best_model.keras'
 model_save = ModelCheckpoint(checkpoint_filepath , save_best_only=True,  monitor='val_accuracy')

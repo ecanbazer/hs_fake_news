@@ -34,8 +34,8 @@ class FakeNewsTest(StageTest):
         accuracy_reply = re.findall(r'\d*\.\d+|\d+', relevant_lines[0])
         if len(accuracy_reply) != 1:
             return CheckResult.wrong(feedback=f'It should be one number in the "Accuracy:" section')
-        # 1% error rate is allowed, right accuracy = 0.812
-        if not 0.98 * 0.865 < float(accuracy_reply[0]) < 1.02 * 0.865:
+        # 1% error rate is allowed, right accuracy = 0.787
+        if not 0.98 * 0.781 < float(accuracy_reply[0]) < 1.02 * 0.781:
             return CheckResult.wrong(feedback=f"Wrong accuracy")
 
         return CheckResult.correct()
