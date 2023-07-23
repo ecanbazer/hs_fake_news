@@ -27,8 +27,8 @@ X = df['text'].apply(lower_str)
 y = df['label']
 y = [0 if i =='FAKE' else 1 for i in list(y)]
 
-comments = X
-labels = y
+X_non_test, X_test, y_non_test, y_test = train_test_split(X, y, test_size = 0.3, random_state = 41)
+X_train, X_val, y_train, y_val = train_test_split(X_non_test, y_non_test, test_size = 0.2, random_state = 41)
 
 from transformers import BertTokenizer
 
@@ -40,7 +40,7 @@ max_len = 0
 min_len = 10000000
 
 # For every sentence...
-for sent in comments:
+for sent in X:
 
     # Tokenize the text and add `[CLS]` and `[SEP]` tokens.
     input_ids = tokenizer.encode(sent, add_special_tokens=True)
@@ -49,12 +49,17 @@ for sent in comments:
     max_len = max(max_len, len(input_ids))
     min_len = min(min_len, len(input_ids))
 
+
 # Tokenize all of the sentences and map the tokens to thier word IDs.
-input_ids = []
-attention_masks = []
+train_input_ids = []
+val_input_ids = []
+test_input_ids = []
+train_attention_masks = []
+val_attention_masks = []
+test_attention_masks = []
 
 # For every sentence...
-for sent in comments:
+for sent in X_train:
     # `encode_plus` will:
     #   (1) Tokenize the sentence.
     #   (2) Prepend the `[CLS]` token to the start.
@@ -73,33 +78,90 @@ for sent in comments:
                    )
     
     # Add the encoded sentence to the list.    
-    input_ids.append(encoded_dict['input_ids'])
+    train_input_ids.append(encoded_dict['input_ids'])
     
     # And its attention mask (simply differentiates padding from non-padding).
-    attention_masks.append(encoded_dict['attention_mask'])
+    train_attention_masks.append(encoded_dict['attention_mask'])
+
+for sent in X_val:
+    # `encode_plus` will:
+    #   (1) Tokenize the sentence.
+    #   (2) Prepend the `[CLS]` token to the start.
+    #   (3) Append the `[SEP]` token to the end.
+    #   (4) Map tokens to their IDs.
+    #   (5) Pad or truncate the sentence to `max_length`
+    #   (6) Create attention masks for [PAD] tokens.
+    encoded_dict = tokenizer.encode_plus(
+                        sent,                      # Sentence to encode.
+                        add_special_tokens = True, # Add '[CLS]' and '[SEP]'
+                        max_length = 512,           # Pad & truncate all sentences.
+                        padding = 'max_length',
+                        truncation = True,
+                        return_attention_mask = True,   # Construct attn. masks.
+                        return_tensors = 'pt',     # Return pytorch tensors.
+                   )
+    
+    # Add the encoded sentence to the list.    
+    val_input_ids.append(encoded_dict['input_ids'])
+    
+    # And its attention mask (simply differentiates padding from non-padding).
+    val_attention_masks.append(encoded_dict['attention_mask'])
+
+
+for sent in X_test:
+    # `encode_plus` will:
+    #   (1) Tokenize the sentence.
+    #   (2) Prepend the `[CLS]` token to the start.
+    #   (3) Append the `[SEP]` token to the end.
+    #   (4) Map tokens to their IDs.
+    #   (5) Pad or truncate the sentence to `max_length`
+    #   (6) Create attention masks for [PAD] tokens.
+    encoded_dict = tokenizer.encode_plus(
+                        sent,                      # Sentence to encode.
+                        add_special_tokens = True, # Add '[CLS]' and '[SEP]'
+                        max_length = 512,           # Pad & truncate all sentences.
+                        padding = 'max_length',
+                        truncation = True,
+                        return_attention_mask = True,   # Construct attn. masks.
+                        return_tensors = 'pt',     # Return pytorch tensors.
+                   )
+    
+    # Add the encoded sentence to the list.    
+    test_input_ids.append(encoded_dict['input_ids'])
+    
+    # And its attention mask (simply differentiates padding from non-padding).
+    test_attention_masks.append(encoded_dict['attention_mask'])
+
 
 # Convert the lists into tensors.
-input_ids = torch.cat(input_ids, dim=0)
-attention_masks = torch.cat(attention_masks, dim=0)
-labels = torch.tensor(labels)
+train_input_ids = torch.cat(train_input_ids, dim=0)
+val_input_ids = torch.cat(val_input_ids, dim=0)
+test_input_ids = torch.cat(test_input_ids, dim=0)
+train_attention_masks = torch.cat(train_attention_masks, dim=0)
+val_attention_masks = torch.cat(val_attention_masks, dim=0)
+test_attention_masks = torch.cat(test_attention_masks, dim=0)
+y_train = torch.tensor(y_train)
+y_val = torch.tensor(y_val)
+y_test = torch.tensor(y_test)
 
-from torch.utils.data import TensorDataset, random_split
-
+from torch.utils.data import TensorDataset
 # Combine the training inputs into a TensorDataset.
-dataset = TensorDataset(input_ids, attention_masks, labels)
+train_dataset = TensorDataset(train_input_ids, train_attention_masks, y_train)
+val_dataset = TensorDataset(val_input_ids, val_attention_masks, y_val)
+test_dataset = TensorDataset(test_input_ids, test_attention_masks, y_test)
 
 # Create a 90-10 train-validation split.
 # Calculate the number of samples to include in each set.
-train_size = int(0.7 * len(dataset))
-val_size = int(0.1 * len(dataset))
-test_size = len(dataset) - (train_size + val_size)
+#train_size = int(0.7 * len(dataset))
+#val_size = int(0.1 * len(dataset))
+#test_size = len(dataset) - (train_size + val_size)
 
 # Divide the dataset by randomly selecting samples.
-train_dataset, val_dataset, test_dataset = random_split(dataset, [train_size, val_size, test_size])
+#train_dataset, val_dataset, test_dataset = random_split(dataset, [train_size, val_size, test_size])
 
-print('{:>5,} training samples'.format(train_size))
-print('{:>5,} validation samples'.format(val_size))
-print('{:>5,} test samples'.format(test_size))
+print('{:>5,} training samples'.format(len(y_train)))
+print('{:>5,} validation samples'.format(len(y_val)))
+print('{:>5,} test samples'.format(len(y_test)))
 
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler
 
@@ -158,9 +220,9 @@ for p in params[-4:]:
 
 # Note: AdamW is a class from the huggingface library (as opposed to pytorch) 
 # I believe the 'W' stands for 'Weight Decay fix"
-optimizer = AdamW(model.parameters(),
-                  lr = 2e-5, # args.learning_rate - default is 5e-5, our notebook had 2e-5
-                  eps = 1e-8 # args.adam_epsilon  - default is 1e-8.
+optimizer = AdamW(model.parameters()
+      #            ,lr = 2e-5, # args.learning_rate - default is 5e-5, our notebook had 2e-5
+       #           eps = 1e-8 # args.adam_epsilon  - default is 1e-8.
                 )
 
 from transformers import get_linear_schedule_with_warmup
@@ -171,12 +233,12 @@ from transformers import get_linear_schedule_with_warmup
 epochs = 3
 # Total number of training steps is [number of batches] x [number of epochs]. 
 # (Note that this is not the same as the number of training samples).
-total_steps = len(train_dataloader) * epochs
+#total_steps = len(train_dataloader) * epochs
 
 # Create the learning rate scheduler.
-scheduler = get_linear_schedule_with_warmup(optimizer, 
-                                            num_warmup_steps = 0, # Default value in run_glue.py
-                                            num_training_steps = total_steps)
+#scheduler = get_linear_schedule_with_warmup(optimizer, 
+#                                            num_warmup_steps = 0, # Default value in run_glue.py
+#                                            num_training_steps = total_steps)
 
 import numpy as np
 
@@ -208,7 +270,7 @@ import numpy as np
 # https://github.com/huggingface/transformers/blob/5bfcd0485ece086ebcbed2d008813037968a9e58/examples/run_glue.py#L128
 
 # Set the seed value all over the place to make this reproducible.
-seed_val = 42
+seed_val = 41
 
 random.seed(seed_val)
 np.random.seed(seed_val)
@@ -314,7 +376,7 @@ for epoch_i in range(0, epochs):
         optimizer.step()
 
         # Update the learning rate.
-        scheduler.step()
+#        scheduler.step()
 
     # Calculate the average loss over all of the batches.
     avg_train_loss = total_train_loss / len(train_dataloader)            
