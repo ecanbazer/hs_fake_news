@@ -35,7 +35,7 @@ class FakeNewsTest(StageTest):
         if len(accuracy_reply) != 1:
             return CheckResult.wrong(feedback=f'It should be one number in the "Accuracy:" section')
         # 1% error rate is allowed, right accuracy = 0.973
-        if not 0.98 * 0.973 < float(accuracy_reply[0]) < 1.02 * 0.973:
+        if not 0.99 * 0.973 < float(accuracy_reply[0]) < 1.01 * 0.973:
             return CheckResult.wrong(feedback=f"Wrong accuracy")
 
         return CheckResult.correct()
