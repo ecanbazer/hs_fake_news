@@ -47,7 +47,7 @@ model.add(Dense(1, activation='sigmoid'
                 #,kernel_initializer = 'ones', bias_initializer='zeros'
                 ))
 
-checkpoint_filepath = 'best_model.keras'
+checkpoint_filepath = 'best_model.hdf5'
 model_save = ModelCheckpoint(checkpoint_filepath , save_best_only=True,  monitor='val_accuracy')
 
 model.compile(optimizer= AdamW(), loss='binary_crossentropy', metrics=['accuracy'])
